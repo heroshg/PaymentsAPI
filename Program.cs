@@ -38,8 +38,5 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentsAPI v1"));
 
-// Health check endpoint
-app.MapGet("/health", () => Results.Ok(new { Status = "Healthy", Service = "PaymentsAPI" }));
-
 app.MapControllers();
 app.Run();
