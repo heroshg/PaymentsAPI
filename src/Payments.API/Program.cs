@@ -19,5 +19,6 @@ builder.Services.AddApiServices();
 
 var app = builder.Build();
 
+app.ApplyMigrations();
 app.UseApiPipeline();
 app.Run();
