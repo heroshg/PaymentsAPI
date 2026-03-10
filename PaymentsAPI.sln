@@ -1,0 +1,37 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payments.Domain", "src\Payments.Domain\Payments.Domain.csproj", "{EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payments.Application", "src\Payments.Application\Payments.Application.csproj", "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payments.Infrastructure", "src\Payments.Infrastructure\Payments.Infrastructure.csproj", "{12121212-1212-1212-1212-121212121212}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payments.API", "src\Payments.API\Payments.API.csproj", "{34343434-3434-3434-3434-343434343434}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12121212-1212-1212-1212-121212121212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12121212-1212-1212-1212-121212121212}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12121212-1212-1212-1212-121212121212}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12121212-1212-1212-1212-121212121212}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34343434-3434-3434-3434-343434343434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34343434-3434-3434-3434-343434343434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34343434-3434-3434-3434-343434343434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34343434-3434-3434-3434-343434343434}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

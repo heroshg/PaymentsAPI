@@ -1,5 +1,7 @@
 using MassTransit;
-using PaymentsAPI.Consumers;
+using Payments.Application;
+using Payments.Infrastructure;
+using Payments.Infrastructure.Messaging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,11 +14,12 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// MassTransit + RabbitMQ
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
+
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderPlacedConsumer>();
-
     x.UsingRabbitMq((ctx, cfg) =>
     {
         cfg.Host(builder.Configuration["RabbitMQ:Host"], "/", h =>
@@ -31,12 +34,11 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "PaymentsAPI", Version = "v1" }));
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Payments API", Version = "v1" }));
 
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentsAPI v1"));
-
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Payments API v1"));
 app.MapControllers();
 app.Run();
