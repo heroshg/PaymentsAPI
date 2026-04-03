@@ -15,7 +15,7 @@ builder.Host.UseSerilog();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
