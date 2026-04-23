@@ -1,4 +1,6 @@
 using Payments.Domain.Events;
+using Payments.Domain.Exceptions;
+using Payments.Domain.ValueObjects;
 
 namespace Payments.Domain.Entities;
 
@@ -6,15 +8,15 @@ public class Payment
 {
     private readonly List<IDomainEvent> _uncommittedEvents = new();
 
-    public Guid Id { get; private set; }
-    public Guid UserId { get; private set; }
-    public string UserEmail { get; private set; } = string.Empty;
-    public Guid GameId { get; private set; }
-    public string GameName { get; private set; } = string.Empty;
-    public decimal Price { get; private set; }
-    public string Status { get; private set; } = string.Empty;
-    public DateTime? ProcessedAt { get; private set; }
-    public int Version { get; private set; }
+    public Guid          Id            { get; private set; }
+    public Guid          UserId        { get; private set; }
+    public string        UserEmail     { get; private set; } = string.Empty;
+    public Guid          GameId        { get; private set; }
+    public string        GameName      { get; private set; } = string.Empty;
+    public decimal       Price         { get; private set; }
+    public PaymentStatus Status        { get; private set; } = null!;
+    public DateTime?     ProcessedAt   { get; private set; }
+    public int           Version       { get; private set; }
 
     public IReadOnlyList<IDomainEvent> UncommittedEvents => _uncommittedEvents.AsReadOnly();
 
@@ -40,8 +42,8 @@ public class Payment
 
     public void Process()
     {
-        if (Status != "Initiated")
-            throw new InvalidOperationException($"Cannot process payment in status '{Status}'.");
+        if (Status != PaymentStatus.Initiated)
+            throw new DomainException($"Cannot process a payment in status '{Status.Value}'.");
 
         var approved = Random.Shared.NextDouble() > 0.1; // 90% approval rate
         if (approved)
@@ -50,7 +52,7 @@ public class Payment
             RaiseEvent(new PaymentRejectedEvent(Id, "Insufficient funds", DateTime.UtcNow));
     }
 
-    public bool IsApproved => Status == "Approved";
+    public bool IsApproved => Status == PaymentStatus.Approved;
 
     private void RaiseEvent(IDomainEvent @event)
     {
@@ -63,20 +65,20 @@ public class Payment
         switch (@event)
         {
             case PaymentInitiatedEvent e:
-                Id = e.PaymentId;
-                UserId = e.UserId;
+                Id        = e.PaymentId;
+                UserId    = e.UserId;
                 UserEmail = e.UserEmail;
-                GameId = e.GameId;
-                GameName = e.GameName;
-                Price = e.Price;
-                Status = "Initiated";
+                GameId    = e.GameId;
+                GameName  = e.GameName;
+                Price     = e.Price;
+                Status    = PaymentStatus.Initiated;
                 break;
             case PaymentApprovedEvent e:
-                Status = "Approved";
+                Status      = PaymentStatus.Approved;
                 ProcessedAt = e.OccurredAt;
                 break;
             case PaymentRejectedEvent e:
-                Status = "Rejected";
+                Status      = PaymentStatus.Rejected;
                 ProcessedAt = e.OccurredAt;
                 break;
         }

@@ -31,6 +31,7 @@ public static class DependencyInjection
 
         services.AddAuthorization();
         services.AddControllers();
+        services.AddHealthChecks();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Payments API", Version = "v1" }));
@@ -48,6 +49,7 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapHealthChecks("/health");
         return app;
     }
 

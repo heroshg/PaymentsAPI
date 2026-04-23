@@ -2,42 +2,46 @@ using FiapCloudGames.Contracts.Events;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Payments.Application.IntegrationEvents;
 using Payments.Domain.Entities;
 using Payments.Domain.Interfaces;
 
 namespace Payments.Application.Commands.ProcessPayment;
 
 public class ProcessPaymentHandler(
-    IPaymentRepository paymentRepository,
-    IPublishEndpoint publishEndpoint,
+    IPaymentRepository repository,
+    IPublishEndpoint publisher,
+    IEventPublisher eventPublisher,
     ILogger<ProcessPaymentHandler> logger)
     : IRequestHandler<ProcessPaymentCommand>
 {
-    public async Task Handle(ProcessPaymentCommand request, CancellationToken ct)
+    public async Task Handle(ProcessPaymentCommand cmd, CancellationToken ct)
     {
-        logger.LogInformation(
-            "Processing payment for OrderId={OrderId} UserId={UserId} GameId={GameId} Price={Price}",
-            request.OrderId, request.UserId, request.GameId, request.Price);
-
         var payment = Payment.Initiate(
-            request.OrderId, request.UserId, request.UserEmail,
-            request.GameId, request.GameName, request.Price);
+            cmd.OrderId, cmd.UserId, cmd.UserEmail,
+            cmd.GameId, cmd.GameName, cmd.Price);
 
         payment.Process();
 
-        await paymentRepository.SaveAsync(payment, ct);
+        await repository.SaveAsync(payment, ct);
 
         logger.LogInformation(
-            "Payment {Status} for OrderId={OrderId}. {EventCount} events persisted to event store.",
-            payment.Status, payment.Id, payment.UncommittedEvents.Count);
+            "Payment {PaymentId} processed with status {Status}",
+            payment.Id, payment.Status.Value);
 
-        await publishEndpoint.Publish(new PaymentProcessedEvent(
-            payment.Id,
-            payment.UserId,
-            payment.UserEmail,
-            payment.GameId,
-            payment.GameName,
-            payment.Price,
-            payment.Status), ct);
+        var evt = new PaymentProcessedEvent(
+            cmd.OrderId,
+            cmd.UserId,
+            cmd.UserEmail,
+            cmd.GameId,
+            cmd.GameName,
+            cmd.Price,
+            payment.Status.Value);
+
+        // Publica no RabbitMQ (CatalogAPI saga consome)
+        await publisher.Publish(evt, ct);
+
+        // Publica no SQS (produção AWS → trigger da Lambda de notificações)
+        await eventPublisher.PublishPaymentProcessedAsync(evt, ct);
     }
 }
