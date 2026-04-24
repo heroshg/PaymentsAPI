@@ -1,0 +1,15 @@
+{
+  "ConnectionStrings": {
+    "Payments": "Host=localhost;Port=5432;Database=payments_db;Username=postgres;Password=CHANGE_ME"
+  },
+  "Jwt": {
+    "Key": "CHANGE_ME_min32chars_use_openssl_rand_base64_32",
+    "Issuer": "FiapCloudGames",
+    "Audience": "FiapCloudGames"
+  },
+  "RabbitMQ": {
+    "Host": "localhost",
+    "Username": "fcg_rmq",
+    "Password": "CHANGE_ME"
+  }
+}
